@@ -37,8 +37,17 @@ document.addEventListener('keydown', (e) => {
   // Check if we're in a text input
   if (!isTextInput(target)) return;
   
+  // ALLOW system shortcuts - don't intercept these
+  if (e.ctrlKey || e.metaKey || e.altKey) {
+    // Allow all Ctrl/Cmd/Alt combinations to work normally
+    return;
+  }
+  
   // Only process single character keys (not special keys)
   if (key.length !== 1) return;
+  
+  // Don't map numbers when Shift is pressed (for normal number input)
+  if (e.shiftKey && /^[0-9]$/.test(key)) return;
   
   // Check if we have a mapping for this key
   const mappedChar = arabicKeyboardMap[key];
