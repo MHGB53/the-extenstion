@@ -6,8 +6,8 @@ const arabicKeyboardMap = {
   'y': 'غ', 'u': 'ع', 'i': 'ه', 'o': 'خ', 'p': 'ح',
   'a': 'ش', 's': 'س', 'd': 'ي', 'f': 'ب', 'g': 'ل',
   'h': 'ا', 'j': 'ت', 'k': 'ن', 'l': 'م', 'z': 'ئ',
-  'x': 'ء', 'c': 'ؤ', 'v': 'ر', 'b': 'ى', 'n': 'ة', 'm': 'و',
-  ',': '،', '.': '.', '/': 'ز', ';': 'ك', "'": 'ط',
+  'x': 'ء', 'c': 'ؤ', 'v': 'ر', '/': 'ظ', '.': 'ز', ',': 'و',
+  'm': 'ة', 'n': 'ى', 'b': 'لا', '`': 'ذ', ';': 'ك', "'": 'ط',
   '[': 'ج', ']': 'د', '-': '-', '=': '='
 };
 
@@ -29,37 +29,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Listen for keyboard input on keydown (more reliable)
 document.addEventListener('keydown', (e) => {
+  // VERY FIRST: Allow all modifier key combinations to pass through
+  // This must be checked BEFORE everything else
+  if (e.ctrlKey || e.metaKey || e.altKey) {
+    // Allow all system shortcuts completely
+    return;
+  }
+  
+  // NOW check if Arabic is enabled
   if (!isArabicEnabled) return;
   
-  // FIRST: Check for system shortcuts - allow them to pass through
-  // Check for any modifier keys (Ctrl, Cmd, Alt, Shift with special needs)
-  if (e.ctrlKey || e.metaKey) {
-    // Allow all Ctrl/Cmd combinations (Ctrl+A, Ctrl+C, Ctrl+V, etc)
-    return;
-  }
-  
-  // Also allow Alt key combinations
-  if (e.altKey) {
-    return;
-  }
-  
-  const target = e.target;
   const key = e.key;
+  const target = e.target;
   
   // Check if we're in a text input
   if (!isTextInput(target)) return;
   
-  // Only process single character keys (not special keys)
+  // Only process single character keys
   if (key.length !== 1) return;
   
   // Check if we have a mapping for this key
   const mappedChar = arabicKeyboardMap[key];
   if (!mappedChar || mappedChar === key) return;
   
-  // Prevent the original character from being typed
+  // Now and ONLY NOW, prevent the original character and insert mapped
   e.preventDefault();
-  
-  // Insert the mapped character
   insertMappedCharacter(target, mappedChar);
   
 }, true);
