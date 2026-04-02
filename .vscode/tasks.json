@@ -1,0 +1,10 @@
+{
+  "run": {
+    "label": "run extension",
+    "order": 1,
+    "type": "shell",
+    "isBackground": true,
+    "command": "npm",
+    "args": ["run", "watch"]
+  }
+}
