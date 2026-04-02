@@ -115,7 +115,7 @@ function onTextchange(event: vscode.TextDocumentChangeEvent) {
   }
 
   // Process each change
-  event.contentChanges.forEach((change) => {
+  event.contentChanges.forEach((change: any) => {
     const insertedText = change.text;
 
     // Only process single character insertions
@@ -129,7 +129,7 @@ function onTextchange(event: vscode.TextDocumentChangeEvent) {
           change.range.end
         );
 
-        editor.edit((editBuilder) => {
+        editor.edit((editBuilder: any) => {
           editBuilder.replace(range, mappedChar);
         });
       }
@@ -147,7 +147,7 @@ function replaceCharacter() {
   const selectedText = editor.document.getText(selection);
 
   if (selectedText && arabicKeyboardMap[selectedText]) {
-    editor.edit((editBuilder) => {
+    editor.edit((editBuilder: any) => {
       editBuilder.replace(selection, arabicKeyboardMap[selectedText]);
     });
   }

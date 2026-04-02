@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Arabic Keyboard Mapper",
+  "version": "1.0.0",
+  "description": "Map QWERTY keyboard to Arabic characters with a simple toggle",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Arabic Keyboard Mapper - Click to toggle"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "commands": {
+    "toggle-arabic": {
+      "suggested_key": {
+        "default": "Alt+A",
+        "windows": "Alt+A"
+      },
+      "description": "Toggle Arabic keyboard mapping"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "all_frames": false,
+      "run_at": "document_start"
+    }
+  ]
+}

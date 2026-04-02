@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arabic Keyboard Mapper</title>
+  <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌍 Arabic Keyboard</h1>
+      <p class="subtitle">QWERTY to Arabic Mapper</p>
+    </div>
+
+    <div class="toggle-section">
+      <div class="toggle-switch">
+        <input type="checkbox" id="toggleSwitch" class="switch-checkbox">
+        <label for="toggleSwitch" class="switch-label">
+          <span class="switch-inner"></span>
+          <span class="switch-switch"></span>
+        </label>
+      </div>
+      <span class="status-text" id="statusText">OFF</span>
+    </div>
+
+    <div class="info-section">
+      <h3>🎯 Quick Guide</h3>
+      <ul>
+        <li><strong>Toggle:</strong> Click the switch above</li>
+        <li><strong>Keyboard Shortcut:</strong> <code>Alt+A</code></li>
+        <li><strong>Works on:</strong> All text fields</li>
+      </ul>
+    </div>
+
+    <div class="mapping-section">
+      <h3>📋 Mapping Example</h3>
+      <table class="mapping-table">
+        <tr>
+          <th>English</th>
+          <th>Arabic</th>
+        </tr>
+        <tr>
+          <td>a</td>
+          <td>ش</td>
+        </tr>
+        <tr>
+          <td>h</td>
+          <td>ا</td>
+        </tr>
+        <tr>
+          <td>d</td>
+          <td>ي</td>
+        </tr>
+        <tr>
+          <td>s</td>
+          <td>س</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="footer">
+      <p>Made with ❤️ for Arabic typists</p>
+      <a href="#" id="settingsLink">Settings</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

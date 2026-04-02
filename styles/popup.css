@@ -1,0 +1,272 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #333;
+}
+
+.container {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 12px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.toggle-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+}
+
+.switch-checkbox {
+  display: none;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 60px;
+  height: 30px;
+  background: #ccc;
+  border-radius: 15px;
+  position: relative;
+  transition: background 0.3s;
+  padding: 2px;
+}
+
+.switch-checkbox:checked + .switch-label {
+  background: #667eea;
+}
+
+.switch-switch {
+  width: 26px;
+  height: 26px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  left: 2px;
+  transition: left 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switch-checkbox:checked + .switch-label .switch-switch {
+  left: 32px;
+}
+
+.status-text {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 60px;
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.status-text.status-on {
+  color: #22c55e;
+  background: #dcfce7;
+}
+
+.status-text.status-off {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.info-section {
+  padding: 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.info-section h3,
+.mapping-section h3 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #667eea;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-section ul {
+  list-style: none;
+  font-size: 13px;
+}
+
+.info-section li {
+  padding: 6px 0;
+  line-height: 1.5;
+}
+
+.info-section code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #667eea;
+}
+
+.mapping-section {
+  padding: 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.mapping-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.mapping-table th {
+  background: #f3f4f6;
+  padding: 8px;
+  text-align: left;
+  font-weight: 600;
+  color: #667eea;
+  border-bottom: 2px solid #667eea;
+}
+
+.mapping-table td {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.mapping-table tr:hover {
+  background: #f9fafb;
+}
+
+.mapping-table td:last-child {
+  text-align: center;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.footer {
+  padding: 15px 20px;
+  background: #f9fafb;
+  border-top: 1px solid #eee;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+
+.footer a {
+  color: #667eea;
+  text-decoration: none;
+  margin-left: 10px;
+  transition: color 0.2s;
+}
+
+.footer a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* Scrollbar styling */
+.mapping-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mapping-section::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.mapping-section::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.mapping-section::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+  }
+  
+  .header {
+    background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+  }
+  
+  .info-section,
+  .mapping-section,
+  .toggle-section,
+  .footer {
+    background: #2d2d44;
+    color: #e0e0e0;
+    border-color: #3d3d54;
+  }
+  
+  .status-text.status-on {
+    color: #10b981;
+    background: #064e3b;
+  }
+  
+  .status-text.status-off {
+    color: #f87171;
+    background: #7f1d1d;
+  }
+  
+  .info-section code {
+    background: #3d3d54;
+    color: #a78bfa;
+  }
+  
+  .mapping-table th {
+    background: #3d3d54;
+    color: #a78bfa;
+    border-bottom-color: #a78bfa;
+  }
+  
+  .mapping-table tr:hover {
+    background: #383854;
+  }
+  
+  .footer a {
+    color: #a78bfa;
+  }
+  
+  .footer a:hover {
+    color: #c084fc;
+  }
+}
