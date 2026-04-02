@@ -31,23 +31,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 document.addEventListener('keydown', (e) => {
   if (!isArabicEnabled) return;
   
+  // FIRST: Check for system shortcuts - allow them to pass through
+  // Check for any modifier keys (Ctrl, Cmd, Alt, Shift with special needs)
+  if (e.ctrlKey || e.metaKey) {
+    // Allow all Ctrl/Cmd combinations (Ctrl+A, Ctrl+C, Ctrl+V, etc)
+    return;
+  }
+  
+  // Also allow Alt key combinations
+  if (e.altKey) {
+    return;
+  }
+  
   const target = e.target;
   const key = e.key;
   
   // Check if we're in a text input
   if (!isTextInput(target)) return;
   
-  // ALLOW system shortcuts - don't intercept these
-  if (e.ctrlKey || e.metaKey || e.altKey) {
-    // Allow all Ctrl/Cmd/Alt combinations to work normally
-    return;
-  }
-  
   // Only process single character keys (not special keys)
   if (key.length !== 1) return;
-  
-  // Don't map numbers when Shift is pressed (for normal number input)
-  if (e.shiftKey && /^[0-9]$/.test(key)) return;
   
   // Check if we have a mapping for this key
   const mappedChar = arabicKeyboardMap[key];
