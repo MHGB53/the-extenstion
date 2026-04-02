@@ -27,8 +27,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// Listen for keyboard input directly
-document.addEventListener('keypress', (e) => {
+// Listen for keyboard input on keydown (more reliable)
+document.addEventListener('keydown', (e) => {
   if (!isArabicEnabled) return;
   
   const target = e.target;
@@ -36,6 +36,9 @@ document.addEventListener('keypress', (e) => {
   
   // Check if we're in a text input
   if (!isTextInput(target)) return;
+  
+  // Only process single character keys (not special keys)
+  if (key.length !== 1) return;
   
   // Check if we have a mapping for this key
   const mappedChar = arabicKeyboardMap[key];
@@ -66,19 +69,36 @@ function isTextInput(el) {
 
 function insertMappedCharacter(el, char) {
   if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-    // For regular input/textarea
+    // For regular input/textarea elements
     const start = el.selectionStart;
     const end = el.selectionEnd;
     const oldValue = el.value;
     el.value = oldValue.substring(0, start) + char + oldValue.substring(end);
     el.selectionStart = el.selectionEnd = start + 1;
     
-    // Trigger input event
+    // Trigger input and change events
     el.dispatchEvent(new Event('input', { bubbles: true }));
     el.dispatchEvent(new Event('change', { bubbles: true }));
-  } else {
-    // For contenteditable elements (Gmail, etc)
-    document.execCommand('insertText', false, char);
+  } else if (el.contentEditable === 'true' || el.getAttribute('contenteditable') === 'true') {
+    // For contenteditable elements (Gmail, etc) - use direct DOM manipulation
+    try {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const textNode = document.createTextNode(char);
+        range.deleteContents();
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        // Trigger input event
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    } catch (err) {
+      console.log('Error inserting character:', err);
+    }
   }
 }
 
