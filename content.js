@@ -27,36 +27,82 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// Listen for keyboard input on keydown (more reliable)
+// Listen for Ctrl+Shift+A to convert selected text to Arabic
 document.addEventListener('keydown', (e) => {
-  // VERY FIRST: Allow all modifier key combinations to pass through
-  // This must be checked BEFORE everything else
-  if (e.ctrlKey || e.metaKey || e.altKey) {
-    // Allow all system shortcuts completely
+  // Check for Ctrl+Shift+A (Cmd+Shift+A on Mac)
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+    e.preventDefault();
+    convertSelectedTextToArabic();
+    return;
+  }
+}, true);
+
+function convertSelectedTextToArabic() {
+  if (!isArabicEnabled) {
+    console.log('Arabic mode is disabled');
     return;
   }
   
-  // NOW check if Arabic is enabled
-  if (!isArabicEnabled) return;
+  const el = document.activeElement;
   
-  const key = e.key;
-  const target = e.target;
+  if (!isTextInput(el)) {
+    console.log('Not a text input element');
+    return;
+  }
   
-  // Check if we're in a text input
-  if (!isTextInput(target)) return;
-  
-  // Only process single character keys
-  if (key.length !== 1) return;
-  
-  // Check if we have a mapping for this key
-  const mappedChar = arabicKeyboardMap[key];
-  if (!mappedChar || mappedChar === key) return;
-  
-  // Now and ONLY NOW, prevent the original character and insert mapped
-  e.preventDefault();
-  insertMappedCharacter(target, mappedChar);
-  
-}, true);
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+    // For regular input/textarea elements
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    
+    if (start === end) {
+      console.log('No text selected');
+      return;
+    }
+    
+    const selectedText = el.value.substring(start, end);
+    const convertedText = convertTextToArabic(selectedText);
+    const oldValue = el.value;
+    el.value = oldValue.substring(0, start) + convertedText + oldValue.substring(end);
+    
+    // Move cursor after converted text
+    el.selectionStart = el.selectionEnd = start + convertedText.length;
+    
+    // Trigger input and change events
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  } else if (el.contentEditable === 'true' || el.getAttribute('contenteditable') === 'true') {
+    // For contenteditable elements (Gmail, etc)
+    try {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0 && !selection.isCollapsed) {
+        const range = selection.getRangeAt(0);
+        const selectedText = range.toString();
+        const convertedText = convertTextToArabic(selectedText);
+        
+        const textNode = document.createTextNode(convertedText);
+        range.deleteContents();
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        // Trigger input event
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    } catch (err) {
+      console.log('Error converting text:', err);
+    }
+  }
+}
+
+function convertTextToArabic(text) {
+  return text.split('').map(char => {
+    const lowerChar = char.toLowerCase();
+    return arabicKeyboardMap[lowerChar] || char;
+  }).join('');
+}
 
 function isTextInput(el) {
   if (!el) return false;
@@ -71,41 +117,6 @@ function isTextInput(el) {
   }
   
   return isInput || isContentEditable;
-}
-
-function insertMappedCharacter(el, char) {
-  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-    // For regular input/textarea elements
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const oldValue = el.value;
-    el.value = oldValue.substring(0, start) + char + oldValue.substring(end);
-    el.selectionStart = el.selectionEnd = start + 1;
-    
-    // Trigger input and change events
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    el.dispatchEvent(new Event('change', { bubbles: true }));
-  } else if (el.contentEditable === 'true' || el.getAttribute('contenteditable') === 'true') {
-    // For contenteditable elements (Gmail, etc) - use direct DOM manipulation
-    try {
-      const selection = window.getSelection();
-      if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const textNode = document.createTextNode(char);
-        range.deleteContents();
-        range.insertNode(textNode);
-        range.setStartAfter(textNode);
-        range.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        
-        // Trigger input event
-        el.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    } catch (err) {
-      console.log('Error inserting character:', err);
-    }
-  }
 }
 
 console.log('Arabic Keyboard Mapper content script loaded!');
