@@ -22,7 +22,9 @@ chrome.commands.onCommand.addListener((command) => {
           chrome.tabs.sendMessage(tab.id, {
             type: 'TOGGLE_ARABIC',
             enabled: newState
-          }).catch(() => {});
+          }).catch(() => {
+            // Silently ignore errors from tabs that don't support messaging
+          });
         });
       });
     });

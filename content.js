@@ -27,9 +27,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// Listen for Ctrl+Shift+A to convert selected text to Arabic
+// Keyboard listener for shortcuts
 document.addEventListener('keydown', (e) => {
-  // Check for Ctrl+Shift+A (Cmd+Shift+A on Mac)
+  // Check for Ctrl+Shift+A (Cmd+Shift+A on Mac) to convert selected text to Arabic
   if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
     e.preventDefault();
     convertSelectedTextToArabic();
